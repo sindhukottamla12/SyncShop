@@ -30,14 +30,23 @@ const Signup = () => {
         />
         <div className="flex space-x-3">
           <button onClick={async ()=>{
-              const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
-                username,
-                password,
-                fullName,
-              });
-              localStorage.setItem("token", response.data.token)
-              localStorage.setItem("signedIn", true);
-              navigate("/dashboard")
+                try {
+                const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+                  username,
+                  password,
+                  fullName,
+                });
+                if (response.status === 200) {
+                  localStorage.setItem("token", response.data.token);
+                  localStorage.setItem("signedIn", true);
+                  navigate("/dashboard");
+                } else {
+                  alert("Error signing up. Please try again.");
+                }
+                } catch (error) {
+                console.error("Signup error:", error);
+                alert("An error occurred during signup. Please try again later.");
+                }
           }} className="bg-yellow-300 cursor-pointer px-4 py-2 border-2 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] border-black shadow-[4px_4px_0px_0px_black] transition-transform transform hover:scale-110">
             Signup
           </button>

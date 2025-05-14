@@ -23,13 +23,22 @@ const Signin = () => {
         />
         <div className="flex space-x-3">
           <button onClick={async()=>{
-            const response = await axios.post("http://localhost:3000/api/v1/user/signin", {
+            try {
+              const response = await axios.post("http://localhost:3000/api/v1/user/signin", {
               username,
               password,
-            });
-            localStorage.setItem("token", response.data.token)
-            localStorage.setItem("signedIn", true);
-            Navigate("/dashboard")
+              });
+              if (response.status === 200) {
+              localStorage.setItem("token", response.data.token);
+              localStorage.setItem("signedIn", true);
+              Navigate("/dashboard");
+              } else {
+              alert("Error signing in. Please try again.");
+              }
+            } catch (error) {
+              console.error("Signin error:", error);
+              alert("An error occurred while signing in. Please check your credentials and try again.");
+            }
           }} className="bg-yellow-300 px-4 py-2 hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] border-2 border-black shadow-[4px_4px_0px_0px_black] cursor-pointer transition-transform transform hover:scale-110">
             Signin
           </button>

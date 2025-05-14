@@ -54,6 +54,6 @@ router.get("/bulk", async (req, res) => {
             error: "An error occurred while fetching the tokens",
         });
     }
-})
+}) 
 
 module.exports = router

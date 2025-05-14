@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const { authMiddleware } = require("../middlewares/Authmiddleware");
 
 const uploadDir = path.resolve(__dirname, "C:\\Users\\rahul\\OneDrive\\Desktop\\gumroad\\frontend\\public\\uploadedFiles");
 if (!fs.existsSync(uploadDir)) {
@@ -20,7 +21,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/upload", authMiddleware,upload.single("file"), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: "No file uploaded" });

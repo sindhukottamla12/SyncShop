@@ -1,0 +1,444 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+export default function DigitalMarket() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentView, setCurrentView] = useState("marketplace");
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showCreateProductModal, setShowCreateProductModal] = useState(false);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [signupName, setSignupName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [userProducts, setUserProducts] = useState([]);
+  const [publishedProducts, setPublishedProducts] = useState([]);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    description: "",
+    price: "",
+    image: "",
+    file: "",
+  });
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [checkout, setCheckout] = useState({
+    name: "",
+    email: "",
+    cardNumber: "",
+    expiry: "",
+    cvv: "",
+  });
+
+  const login = () => {
+    setIsLoggedIn(true);
+    setShowLoginModal(false);
+    setCurrentView("dashboard");
+  };
+
+  const signup = () => {
+    setIsLoggedIn(true);
+    setShowSignupModal(false);
+    setCurrentView("dashboard");
+  };
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    setCurrentView("marketplace");
+  };
+
+  const handleProductImage = (event) => {
+    setNewProduct({
+      ...newProduct,
+      image: URL.createObjectURL(event.target.files[0]),
+    });
+  };
+
+  const handleProductFile = (event) => {
+    setNewProduct({
+      ...newProduct,
+      file: event.target.files[0].name,
+    });
+  };
+
+  const createProduct = () => {
+    const product = {
+      id: Date.now(),
+      ...newProduct,
+      published: false,
+    };
+    setUserProducts([...userProducts, product]);
+    setShowCreateProductModal(false);
+    setNewProduct({
+      name: "",
+      description: "",
+      price: "",
+      image: "",
+      file: "",
+    });
+  };
+
+  const togglePublish = (product) => {
+    const updatedProduct = { ...product, published: !product.published };
+    setUserProducts(
+      userProducts.map((p) => (p.id === product.id ? updatedProduct : p))
+    );
+    if (updatedProduct.published) {
+      setPublishedProducts([...publishedProducts, updatedProduct]);
+    } else {
+      setPublishedProducts(
+        publishedProducts.filter((p) => p.id !== updatedProduct.id)
+      );
+    }
+  };
+
+  const showCheckout = (product) => {
+    setSelectedProduct(product);
+    setShowCheckoutModal(true);
+  };
+
+  const processPayment = () => {
+    alert("Payment processed! Download starting...");
+    const link = document.createElement("a");
+    link.href = selectedProduct.file;
+    link.download = selectedProduct.file;
+    link.click();
+    setShowCheckoutModal(false);
+  };
+
+  return (
+    <div className="bg-[#00C6CF] min-h-screen">
+      <nav className="bg-white p-4 neubrutalism mb-8">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold">DigitalMarket</h1>
+          {!isLoggedIn ? (
+            <div>
+              <Button
+                onClick={() => setShowLoginModal(true)}
+                className="bg-yellow-300 neubrutalism mr-2"
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => setShowSignupModal(true)}
+                className="bg-green-300 neubrutalism"
+              >
+                Sign Up
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <Button
+                onClick={() => setCurrentView("dashboard")}
+                className="bg-purple-300 neubrutalism mr-2"
+              >
+                Dashboard
+              </Button>
+              <Button
+                onClick={() => setCurrentView("marketplace")}
+                className="bg-blue-300 neubrutalism mr-2"
+              >
+                Marketplace
+              </Button>
+              <Button
+                onClick={logout}
+                className="bg-red-300 neubrutalism"
+              >
+                Logout
+              </Button>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      <div className="container mx-auto px-4">
+        <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Login</DialogTitle>
+            </DialogHeader>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              className="neubrutalism mb-2"
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              className="neubrutalism mb-4"
+            />
+            <div className="flex justify-end gap-2">
+              <Button onClick={login} className="bg-yellow-300 neubrutalism">
+                Login
+              </Button>
+              <Button
+                onClick={() => setShowLoginModal(false)}
+                className="bg-gray-300 neubrutalism"
+              >
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showSignupModal} onOpenChange={setShowSignupModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Sign Up</DialogTitle>
+            </DialogHeader>
+            <Input
+              type="text"
+              placeholder="Name"
+              value={signupName}
+              onChange={(e) => setSignupName(e.target.value)}
+              className="neubrutalism mb-2"
+            />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={signupEmail}
+              onChange={(e) => setSignupEmail(e.target.value)}
+              className="neubrutalism mb-2"
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={signupPassword}
+              onChange={(e) => setSignupPassword(e.target.value)}
+              className="neubrutalism mb-4"
+            />
+            <div className="flex justify-end gap-2">
+              <Button onClick={signup} className="bg-green-300 neubrutalism">
+                Sign Up
+              </Button>
+              <Button
+                onClick={() => setShowSignupModal(false)}
+                className="bg-gray-300 neubrutalism"
+              >
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {currentView === "dashboard" && (
+          <div className="bg-white p-8 neubrutalism">
+            <h2 className="text-2xl mb-4">Creator Dashboard</h2>
+            <Button
+              onClick={() => setShowCreateProductModal(true)}
+              className="bg-green-300 neubrutalism mb-8"
+            >
+              Create New Product
+            </Button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {userProducts.map((product) => (
+                <div key={product.id} className="bg-white p-4 neubrutalism">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-48 object-cover mb-4 neubrutalism"
+                  />
+                  <h3 className="text-xl font-bold">{product.name}</h3>
+                  <p className="mb-2">${product.price}</p>
+                  <p className="mb-4">{product.description}</p>
+                  <Button
+                    onClick={() => togglePublish(product)}
+                    className={`${
+                      product.published ? "bg-red-300" : "bg-green-300"
+                    } neubrutalism`}
+                  >
+                    {product.published ? "Unpublish" : "Publish"}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <Dialog
+          open={showCreateProductModal}
+          onOpenChange={setShowCreateProductModal}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Product</DialogTitle>
+            </DialogHeader>
+            <Input
+              type="text"
+              placeholder="Product Name"
+              value={newProduct.name}
+              onChange={(e) =>
+                setNewProduct({ ...newProduct, name: e.target.value })
+              }
+              className="neubrutalism mb-2"
+            />
+            <Textarea
+              placeholder="Product Description"
+              value={newProduct.description}
+              onChange={(e) =>
+                setNewProduct({ ...newProduct, description: e.target.value })
+              }
+              className="neubrutalism mb-2"
+            />
+            <Input
+              type="number"
+              placeholder="Price"
+              value={newProduct.price}
+              onChange={(e) =>
+                setNewProduct({ ...newProduct, price: e.target.value })
+              }
+              className="neubrutalism mb-2"
+            />
+            <Input
+              type="file"
+              onChange={handleProductImage}
+              className="neubrutalism mb-2"
+            />
+            <Input
+              type="file"
+              onChange={handleProductFile}
+              className="neubrutalism mb-4"
+            />
+            <div className="flex justify-end gap-2">
+              <Button onClick={createProduct} className="bg-green-300 neubrutalism">
+                Create
+              </Button>
+              <Button
+                onClick={() => setShowCreateProductModal(false)}
+                className="bg-gray-300 neubrutalism"
+              >
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {currentView === "marketplace" && (
+          <div className="bg-white p-8 neubrutalism">
+            <h2 className="text-2xl mb-8">Marketplace</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {publishedProducts.map((product) => (
+                <div key={product.id} className="bg-white p-4 neubrutalism">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-48 object-cover mb-4 neubrutalism"
+                  />
+                  <h3 className="text-xl font-bold">{product.name}</h3>
+                  <p className="mb-2">${product.price}</p>
+                  <p className="mb-4">{product.description}</p>
+                  <Button
+                    onClick={() => showCheckout(product)}
+                    className="bg-blue-300 neubrutalism"
+                  >
+                    Buy Now
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <Dialog open={showCheckoutModal} onOpenChange={setShowCheckoutModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Checkout</DialogTitle>
+            </DialogHeader>
+            {selectedProduct && (
+              <div className="mb-4">
+                <h3 className="font-bold">{selectedProduct.name}</h3>
+                <p>${selectedProduct.price}</p>
+              </div>
+            )}
+            <Input
+              type="text"
+              placeholder="Full Name"
+              value={checkout.name}
+              onChange={(e) =>
+                setCheckout({ ...checkout, name: e.target.value })
+              }
+              className="neubrutalism mb-2"
+            />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={checkout.email}
+              onChange={(e) =>
+                setCheckout({ ...checkout, email: e.target.value })
+              }
+              className="neubrutalism mb-2"
+            />
+            <Input
+              type="text"
+              placeholder="Card Number"
+              value={checkout.cardNumber}
+              onChange={(e) =>
+                setCheckout({ ...checkout, cardNumber: e.target.value })
+              }
+              className="neubrutalism mb-2"
+            />
+            <div className="flex gap-2 mb-4">
+              <Input
+                type="text"
+                placeholder="MM/YY"
+                value={checkout.expiry}
+                onChange={(e) =>
+                  setCheckout({ ...checkout, expiry: e.target.value })
+                }
+                className="neubrutalism w-1/2"
+              />
+              <Input
+                type="text"
+                placeholder="CVV"
+                value={checkout.cvv}
+                onChange={(e) =>
+                  setCheckout({ ...checkout, cvv: e.target.value })
+                }
+                className="neubrutalism w-1/2"
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button
+                onClick={processPayment}
+                className="bg-green-300 neubrutalism"
+              >
+                Pay Now
+              </Button>
+              <Button
+                onClick={() => setShowCheckoutModal(false)}
+                className="bg-gray-300 neubrutalism"
+              >
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+      <style jsx global>{`
+        .neubrutalism {
+          border: 3px solid black;
+          box-shadow: 5px 5px 0px black;
+          transition: all 0.2s ease;
+        }
+        .neubrutalism:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 7px 7px 0px black;
+        }
+      `}</style>
+    </div>
+  );
+}

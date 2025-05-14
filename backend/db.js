@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+mongoose.connect("mongodb+srv://Rahul:Rahul6255@cluster0.uera1.mongodb.net/Gumroad")
+
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -29,7 +31,7 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
-    },
+    },  
     products :[{
         productName : {
             type: String,
@@ -93,6 +95,7 @@ const PublishedProductSchema = new mongoose.Schema({
         trim: true,
         maxLength: 100
     },
+
     productDescription : {
         type: String,
         required: true,
@@ -126,3 +129,5 @@ module.exports  = {
     Product,
     PublishedProducts
 };
+
+

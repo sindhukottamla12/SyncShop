@@ -67,10 +67,6 @@ router.put('/update-product/:productId',authMiddleware, async (req, res) => {
     }
     product.productName = body.productName || product.productName;
     product.productDescription = body.productDescription || product.productDescription;
-    product.productThumbnail = body.productThumbnail || product.productThumbnail;
-    product.productFile = body.productFile || product.productFile;
-    product.sales = body.sales || product.sales;
-    product.revenue = body.revenue || product.revenue;
     product.price = body.price || product.price;
     product.published = body.published || product.published;
     await user.save();
@@ -106,7 +102,7 @@ router.get('/bulk',authMiddleware, async (req, res) => {
         const id  = req.userId;  
         const userProducts = await Product.findOne({ userId: id });
         if (!userProducts) {
-            return res.status(404).json({ message: "No FD Token found" });
+            return res.status(404).json({ message: "No Product found" });
         }
         res.json({
             message: "User Products fetched successfully",
@@ -115,7 +111,7 @@ router.get('/bulk',authMiddleware, async (req, res) => {
     } catch (error) {
         console.error("Error fetching user Products:", error.message);
         res.status(500).json({
-            message: "An error occurred while fetching the FD Tokens",
+            message: "An error occurred while fetching the user Products",
             error: error.message,
         });
     }

@@ -26,7 +26,7 @@ const CreateProduct = () => {
       formData.append("image", imageFile);
 
       const uploadRes = await axios.post("http://localhost:3000/api/v1/image/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" ,Authorization: "Bearer " + localStorage.getItem("token")},
       });
 
       const imageName = uploadRes.data.imageName;
@@ -35,7 +35,7 @@ const CreateProduct = () => {
       formData2.append("file", productFile);
 
       const uploadRes2 = await axios.post("http://localhost:3000/api/v1/file/upload", formData2, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" , Authorization: "Bearer " + localStorage.getItem("token")},
       });
 
       const fileName = uploadRes2.data.fileName;
@@ -97,7 +97,7 @@ const CreateProduct = () => {
         <input
           type="file"
           onChange={(e) => setImageFile(e.target.files[0])}
-          className="w-full mb-4 p-2 border-2 border-black shadow-[4px_4px_0px_0px_black]"
+          className="w-full mb-4 p-2 border-2 file:border-2 file:bg-amber-50 file:rounded file:p-1 cursor-pointer file:cursor-pointer border-black shadow-[4px_4px_0px_0px_black]"
           accept="image/*"
           required
           />
@@ -105,7 +105,7 @@ const CreateProduct = () => {
         <input
           type="file"
           onChange={(e) => setProductFile(e.target.files[0])}
-          className="w-full mb-4 p-2 border-2 border-black shadow-[4px_4px_0px_0px_black]"
+          className="w-full mb-4 p-2 border-2 file:border-2 file:bg-amber-50 file:rounded file:p-1 cursor-pointer file:cursor-pointer border-black shadow-[4px_4px_0px_0px_black]"
           accept="file/*"
           required
         />
@@ -113,7 +113,7 @@ const CreateProduct = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`bg-green-300 px-4 py-2 border-2 border-black shadow-[4px_4px_0px_0px_black] transition-transform transform hover:scale-110 ${
+            className={`bg-green-300 px-4 py-2 border-2 border-black cursor-pointer shadow-[4px_4px_0px_0px_black] transition-transform transform hover:scale-110 ${
               loading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
@@ -122,7 +122,7 @@ const CreateProduct = () => {
           <button
             type="button"
             onClick={() => navigate('/dashboard')}
-            className="bg-gray-300 px-4 py-2 border-2 border-black shadow-[4px_4px_0px_0px_black] transition-transform transform hover:scale-110"
+            className="bg-gray-300 px-4 py-2 border-2 border-black cursor-pointer shadow-[4px_4px_0px_0px_black] transition-transform transform hover:scale-110"
           >
             Cancel
           </button>
