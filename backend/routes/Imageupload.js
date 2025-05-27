@@ -2,10 +2,13 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
+const My_dirName = "YOUR_FULL_FRONTEND_DIR_PATH"
+//Example
+// const My_dirName = "C:\\Users\\rahul\\OneDrive\\Desktop\\gumroad\\frontend"
 const fs = require("fs");
 const { authMiddleware } = require("../middlewares/Authmiddleware");
 
-const uploadDir = path.resolve(__dirname, "C:\\Users\\rahul\\OneDrive\\Desktop\\gumroad\\frontend\\public\\uploadedImages");
+const uploadDir = path.resolve(__dirname, My_dirName + "\\public\\uploadedImages");
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
