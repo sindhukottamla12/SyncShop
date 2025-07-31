@@ -5,7 +5,7 @@ const Navbar = () => {
     const signedIn = localStorage.getItem("signedIn");
 return (
     <div className="flex justify-between bg-black items-center px-6 py-4 border-b-4 border-black">
-        <h1 onClick={()=>{Navigate("/signin")}} className="text-5xl font-mono shadow-[4px_4px_0px_0px_black] font-bold text-white cursor-pointer ">GumRoad</h1>
+        <h1 onClick={()=>{Navigate("/signin")}} className="text-5xl font-mono shadow-[4px_4px_0px_0px_black] font-bold text-white cursor-pointer ">SyncShop</h1>
         <div className='flex space-x-4'> 
 
             <div className="space-x-4">

@@ -2,9 +2,8 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-const My_dirName = "YOUR_FULL_FRONTEND_DIR_PATH"
-//Example
-// const My_dirName = "C:\\Users\\rahul\\OneDrive\\Desktop\\gumroad\\frontend"
+const My_dirName = "C:\\Users\\DELL\\OneDrive\\Desktop\\SyncShop\\frontend";
+
 const fs = require("fs");
 const { authMiddleware } = require("../middlewares/Authmiddleware");
 
